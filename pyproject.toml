@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "A unified GenAI API wrapper with scheduling, monitoring, and caching."
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-packages = [{include = "app"}]
+packages = [{include = "genbox"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"

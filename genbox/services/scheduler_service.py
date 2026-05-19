@@ -24,8 +24,18 @@ class SchedulerService:
         job_stores = {
             'default': SQLAlchemyJobStore(url=settings.DATABASE_URL)
         }
+        # Do not start here, it needs a running event loop
         self.scheduler = AsyncIOScheduler(jobstores=job_stores)
-        self.scheduler.start()
+
+    def start(self):
+        if not self.scheduler.running:
+            self.scheduler.start()
+            logger.info("Scheduler started.")
+
+    def shutdown(self):
+        if self.scheduler.running:
+            self.scheduler.shutdown()
+            logger.info("Scheduler shut down.")
 
     def _parse_schedule(self, schedule_days: str) -> dict[str, str]:
         """Convert custom schedule string (Mo, Tu or 1, 15) to APScheduler params."""

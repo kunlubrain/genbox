@@ -1,4 +1,5 @@
 import logging
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request, Depends, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from genbox.models.schemas import GenerateRequest, GenerateResponse, ScheduleRequest, JobInfo, MonitorStats, UserLogsResponse, LogEntry
@@ -15,10 +16,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Start the scheduler
+    scheduler_service.start()
+    yield
+    # Shutdown: Stop the scheduler
+    scheduler_service.shutdown()
+
 app = FastAPI(
     title="GenBox API",
-    version="1.5.0",
-    description="Secure unified API for GenAI providers with scheduling and monitoring."
+    version="1.5.1",
+    description="Secure unified API for GenAI providers with scheduling and monitoring.",
+    lifespan=lifespan
 )
 
 # CORS Middleware

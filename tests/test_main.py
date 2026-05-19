@@ -1,12 +1,13 @@
 import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import AsyncMock, patch
-from genbox.main import genbox
+from genbox.main import app
+from genbox.core.config import settings
 
 client = TestClient(app)
 
 @pytest.mark.asyncio
-@patch("app.main.genai_service.generate_text", new_callable=AsyncMock)
+@patch("genbox.main.genai_service.generate_text", new_callable=AsyncMock)
 async def test_generate_text(mock_generate):
     mock_generate.return_value = "This is a test response."
     
@@ -21,7 +22,7 @@ async def test_generate_text(mock_generate):
     assert response.json() == {"data": "This is a test response."}
 
 @pytest.mark.asyncio
-@patch("app.main.genai_service.generate_dict", new_callable=AsyncMock)
+@patch("genbox.main.genai_service.generate_dict", new_callable=AsyncMock)
 async def test_generate_dict_bookstore(mock_generate):
     # Mock data matching the bookstore schema
     mock_data = {
@@ -65,7 +66,7 @@ async def test_generate_dict_bookstore(mock_generate):
     assert len(response.json()["data"]["books"]) == 2
 
 @pytest.mark.asyncio
-@patch("app.main.genai_service.generate_csv", new_callable=AsyncMock)
+@patch("genbox.main.genai_service.generate_csv", new_callable=AsyncMock)
 async def test_generate_csv_movies(mock_generate):
     # Mock data matching the requested CSV structure
     mock_data = [

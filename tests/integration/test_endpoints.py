@@ -2,7 +2,7 @@ import os
 import pytest
 import vcr
 from fastapi.testclient import TestClient
-from genbox.main import genbox
+from genbox.main import app
 from genbox.core.config import settings
 
 client = TestClient(app)

@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Project Specific
+storage/
+*.db
+genai_jobs.db
+tests/integration/cassettes/
+
+# OS
+.DS_Store
+Thumbs.db

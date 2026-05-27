@@ -26,12 +26,15 @@ my_vcr = vcr.VCR(
 @skip_if_no_api_key
 @my_vcr.use_cassette('test_generate_text_real.yaml')
 async def test_generate_text_real():
-    headers = {"X-API-KEY": settings.API_KEY}
+    # Use one of the authorized tokens
+    token = list(settings.AUTHORIZED_TOKENS)[0]
+    headers = {"X-API-KEY": token}
+    
     response = client.post("/v1/generate/text", json={
         "user_id": "test_user",
         "prompt": "Say 'Integration test success' in one short sentence.",
         "model_name": "gemini-1.5-flash"
-    })
+    }, headers=headers)
     
     assert response.status_code == 200
     assert "data" in response.json()
@@ -61,13 +64,16 @@ async def test_generate_dict_bookstore_real():
         "required": ["bookstore_name", "books"]
     }
 
-    headers = {"X-API-KEY": settings.API_KEY}
+    # Use one of the authorized tokens
+    token = list(settings.AUTHORIZED_TOKENS)[0]
+    headers = {"X-API-KEY": token}
+
     response = client.post("/v1/generate/dict", json={
         "user_id": "test_user",
         "prompt": "Create a bookstore inventory with 2 books about Python.",
         "json_schema": bookstore_schema,
         "model_name": "gemini-1.5-flash"
-    })
+    }, headers=headers)
     
     assert response.status_code == 200
     data = response.json()["data"]
@@ -81,12 +87,15 @@ async def test_generate_dict_bookstore_real():
 async def test_generate_csv_movies_real():
     prompt = "List 5 movies in 2026 with title, country, genre, imgurl, boxoffice as CSV."
     
-    headers = {"X-API-KEY": settings.API_KEY}
+    # Use one of the authorized tokens
+    token = list(settings.AUTHORIZED_TOKENS)[0]
+    headers = {"X-API-KEY": token}
+
     response = client.post("/v1/generate/csv", json={
         "user_id": "test_user",
         "prompt": prompt,
         "model_name": "gemini-1.5-flash"
-    })
+    }, headers=headers)
     
     assert response.status_code == 200
     data = response.json()["data"]

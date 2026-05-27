@@ -16,7 +16,9 @@ def test_schedule_and_delete_job():
         "callback_url": "http://localhost:8000/callback"
     }
     
-    headers = {"X-API-KEY": settings.API_KEY}
+    # Use one of the authorized tokens (defaults to "change-me-in-production")
+    token = list(settings.AUTHORIZED_TOKENS)[0]
+    headers = {"X-API-KEY": token}
     
     response = client.post("/v1/schedule", json=schedule_data, headers=headers)
     
@@ -44,4 +46,4 @@ def test_schedule_unauthorized():
     # Send request without X-API-KEY header
     response = client.post("/v1/schedule", json=schedule_data)
     assert response.status_code == 401
-    assert response.json()["detail"] == "Missing or invalid API key"
+    assert response.json()["detail"] == "Missing or invalid access token"

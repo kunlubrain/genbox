@@ -30,7 +30,7 @@ def mock_monitor():
 async def test_generate_text(mock_generate):
     mock_generate.return_value = "This is a test response."
     
-    headers = {"X-API-KEY": "any-key"}
+    headers = {"X-API-KEY": "any-valid-token"}
     response = client.post("/v1/generate/text", json={
         "user_id": "test_user",
         "prompt": "Hello",
@@ -74,7 +74,7 @@ async def test_generate_dict_bookstore(mock_generate):
         "required": ["bookstore_name", "books"]
     }
 
-    headers = {"X-API-KEY": "any-key"}
+    headers = {"X-API-KEY": "any-valid-token"}
     response = client.post("/v1/generate/dict", json={
         "user_id": "test_user",
         "prompt": "Create a bookstore inventory.",
@@ -101,7 +101,7 @@ async def test_generate_csv_movies(mock_generate):
     
     prompt = "List 5 movies in 2026 with title, country, genre, imgurl, boxoffice as CSV."
     
-    headers = {"X-API-KEY": "any-key"}
+    headers = {"X-API-KEY": "any-valid-token"}
     response = client.post("/v1/generate/csv", json={
         "user_id": "test_user",
         "prompt": prompt

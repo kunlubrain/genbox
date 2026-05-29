@@ -18,14 +18,13 @@ def authorized_client():
     app.dependency_overrides = {}
 
 def test_schedule_and_delete_job(authorized_client):
-    # 1. Schedule a job
+    # 1. Schedule a job without a callback URL
     schedule_data = {
         "user_id": "test_user",
         "prompt": "Test prompt",
         "response_type": "text",
         "schedule_days": "Mo, Tu",
-        "clock_hour": 10,
-        "callback_url": "http://localhost:8000/callback"
+        "clock_hour": 10
     }
     
     headers = {"X-API-KEY": TEST_TOKEN}
@@ -47,8 +46,7 @@ def test_schedule_unauthorized():
         "prompt": "Test prompt",
         "response_type": "text",
         "schedule_days": "DD",
-        "clock_hour": 10,
-        "callback_url": "http://localhost:8000/callback"
+        "clock_hour": 10
     }
     
     # Send request without valid header

@@ -115,8 +115,11 @@ class SchedulerService:
             with open(file_path, "w") as f:
                 json.dump(result, f, indent=2)
 
-            # 3. Callback with retry (2 times over an hour)
-            await self._send_callback(request.callback_url, result)
+            # 3. Callback with retry (only if callback_url is provided)
+            if request.callback_url:
+                await self._send_callback(request.callback_url, result)
+            else:
+                logger.info(f"No callback_url provided for job {job_id}, skipping webhook.")
             
             # 4. Monitor Log & Store Cache
             monitor_service.log_request(

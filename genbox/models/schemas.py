@@ -17,7 +17,7 @@ class ScheduleRequest(BaseModel):
     schedule_days: str = "Su"
     clock_hour: int = 1
     end_date: datetime | None = None
-    callback_url: str
+    callback_url: str | None = None  # Now optional
 
 class GenerateResponse(BaseModel):
     data: Any
@@ -40,6 +40,7 @@ class LogEntry(BaseModel):
     status: str
     periodicity: str
     job_id: str | None
+    response_data: Any | None = None  # Added to allow fetching results
 
 class UserLogsResponse(BaseModel):
     user_id: str

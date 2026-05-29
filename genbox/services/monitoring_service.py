@@ -42,12 +42,14 @@ class MonitorService:
         finally:
             db.close()
 
-    def get_user_logs(self, user_id: str, limit: int = 100) -> list[MonitorLog]:
+    def get_user_logs(self, user_id: str, job_id: str | None = None, limit: int = 100) -> list[MonitorLog]:
         db: Session = SessionLocal()
         try:
-            return db.query(MonitorLog).filter(
-                MonitorLog.user_id == user_id
-            ).order_by(desc(MonitorLog.timestamp)).limit(limit).all()
+            query = db.query(MonitorLog).filter(MonitorLog.user_id == user_id)
+            if job_id:
+                query = query.filter(MonitorLog.job_id == job_id)
+            
+            return query.order_by(desc(MonitorLog.timestamp)).limit(limit).all()
         finally:
             db.close()
 

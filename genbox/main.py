@@ -122,19 +122,26 @@ async def get_monitor_stats_endpoint():
         raise HTTPException(status_code=500, detail=f"Failed to retrieve stats: {str(e)}")
 
 @v1_router.get("/monitor/logs/{user_id}", response_model=UserLogsResponse)
-async def get_user_logs_endpoint(user_id: str):
+async def get_user_logs_endpoint(user_id: str, job_id: str | None = None):
     try:
-        logs = monitor_service.get_user_logs(user_id)
-        formatted_logs = [
-            LogEntry(
+        logs = monitor_service.get_user_logs(user_id, job_id=job_id)
+        formatted_logs = []
+        for log in logs:
+            try:
+                # Parse the stored string back to its original structure
+                resp = json.loads(log.response_data) if log.response_data else None
+            except:
+                resp = log.response_data
+
+            formatted_logs.append(LogEntry(
                 id=log.id,
                 prompt=log.prompt,
                 timestamp=log.timestamp,
                 status=log.status,
                 periodicity=log.periodicity,
-                job_id=log.job_id
-            ) for log in logs
-        ]
+                job_id=log.job_id,
+                response_data=resp
+            ))
         return UserLogsResponse(user_id=user_id, logs=formatted_logs)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve user logs: {str(e)}")

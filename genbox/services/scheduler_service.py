@@ -62,7 +62,7 @@ class SchedulerService:
         # Convert to cron params
         cron_params = self._parse_schedule(request.schedule_days)
         
-        job_id = f"{request.user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        job_id = f"job_{request.user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}"
         
         self.scheduler.add_job(
             self.execute_and_callback,
